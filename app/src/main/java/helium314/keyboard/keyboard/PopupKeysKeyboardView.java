@@ -232,6 +232,20 @@ public class PopupKeysKeyboardView extends KeyboardView implements PopupKeysPane
      */
     protected void onKeyInput(final Key key, final int x, final int y) {
         if (mListener != null) {
+            Keyboard kb = getKeyboard();
+            if (kb instanceof PopupKeysKeyboard) {
+                Key parentKey = ((PopupKeysKeyboard) kb).mParentKey;
+                if (parentKey != null) {
+                    int parentCode = parentKey.getCode();
+                    if (parentCode > 0 || parentCode == KeyCode.MULTIPLE_CODE_POINTS) {
+                        int len = (parentCode == KeyCode.MULTIPLE_CODE_POINTS && parentKey.getOutputText() != null)
+                                ? parentKey.getOutputText().length() : 1;
+                        for (int i = 0; i < len; i++) {
+                            mListener.onCodeInput(KeyCode.DELETE, Constants.NOT_A_COORDINATE, Constants.NOT_A_COORDINATE, false);
+                        }
+                    }
+                }
+            }
             final int code = key.getCode();
             if (code == KeyCode.MULTIPLE_CODE_POINTS) {
                 mListener.onTextInput(mCurrentKey.getOutputText());

@@ -20,9 +20,11 @@ import helium314.keyboard.latin.utils.TypefaceUtils;
 
 public final class PopupKeysKeyboard extends Keyboard {
     private final int mDefaultKeyCoordX;
+    public final Key mParentKey;
 
-    PopupKeysKeyboard(final PopupKeysKeyboardParams params) {
+    PopupKeysKeyboard(final PopupKeysKeyboardParams params, final Key parentKey) {
         super(params);
+        mParentKey = parentKey;
         mDefaultKeyCoordX = params.getDefaultKeyCoordX() + params.mAbsolutePopupKeyWidth / 2;
     }
 
@@ -350,7 +352,7 @@ public final class PopupKeysKeyboard extends Keyboard {
                     params.onAddKey(divider);
                 }
             }
-            return new PopupKeysKeyboard(params);
+            return new PopupKeysKeyboard(params, mParentKey);
         }
     }
 

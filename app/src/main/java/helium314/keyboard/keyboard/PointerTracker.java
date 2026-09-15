@@ -739,6 +739,7 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
             mStartX = x;
             mStartY = y;
             mStartTime = SystemClock.elapsedRealtime();
+            callListenerOnCodeInput(key, key.getCode(), x, y, eventTime, false);
         }
     }
 
@@ -852,6 +853,7 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
         }
         startLongPressTimer(key);
         setPressedKeyGraphics(key, eventTime);
+        // Removed callListenerOnCodeInput to ensure only one key per touch down.
     }
 
     private void processProximateBogusDownMoveUpEventHack(final Key key, final int x, final int y,
@@ -1133,7 +1135,11 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
                 && (currentKey.getCode() == currentRepeatingKeyCode) && !isInDraggingFinger) {
             return;
         }
-        detectAndSendKey(currentKey, mKeyX, mKeyY, eventTime);
+        if (currentKey == null) {
+            callListenerOnCancelInput();
+        } else {
+            callListenerOnRelease(currentKey, currentKey.getCode(), false);
+        }
         if (isInSlidingKeyInput) {
             callListenerOnFinishSlidingInput();
         }
@@ -1163,6 +1169,13 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
         final int code = key.getCode();
         sListener.onLongPressKey(code);
         if (key.hasNoPanelAutoPopupKey()) {
+            if (code > 0 || code == KeyCode.MULTIPLE_CODE_POINTS) {
+                int len = (code == KeyCode.MULTIPLE_CODE_POINTS && key.getOutputText() != null)
+                        ? key.getOutputText().length() : 1;
+                for (int i = 0; i < len; i++) {
+                    sListener.onCodeInput(KeyCode.DELETE, Constants.NOT_A_COORDINATE, Constants.NOT_A_COORDINATE, false);
+                }
+            }
             cancelKeyTracking();
             final int popupKeyCode = key.getPopupKeys()[0].mCode;
             sListener.onPressKey(popupKeyCode, 0, 1, HapticEvent.NO_HAPTICS);
@@ -1311,16 +1324,7 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
                 && y > key.getY() + key.getHeight() * 0.15 && y < key.getY() + key.getHeight() * 0.85;
     }
 
-    private void detectAndSendKey(final Key key, final int x, final int y, final long eventTime) {
-        if (key == null) {
-            callListenerOnCancelInput();
-            return;
-        }
 
-        final int code = key.getCode();
-        callListenerOnCodeInput(key, code, x, y, eventTime, false);
-        callListenerOnRelease(key, code, false);
-    }
 
     private void startRepeatKey(final Key key) {
         if (sInGesture) return;
