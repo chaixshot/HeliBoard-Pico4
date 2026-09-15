@@ -7,7 +7,9 @@
 package helium314.keyboard.latin;
 
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Vibrator;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
@@ -26,6 +28,11 @@ import helium314.keyboard.latin.settings.SettingsValues;
 public final class AudioAndHapticFeedbackManager {
     private AudioManager mAudioManager;
     private Vibrator mVibrator;
+    private SoundPool mSoundPool;
+    private int mSoundStandard = -1;
+    private int mSoundDelete = -1;
+    private int mSoundReturn = -1;
+    private int mSoundSpacebar = -1;
 
     private SettingsValues mSettingsValues;
     private boolean mSoundOn;
@@ -49,6 +56,46 @@ public final class AudioAndHapticFeedbackManager {
     private void initInternal(final Context context) {
         mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        initSoundPool(context);
+    }
+
+    private void initSoundPool(final Context context) {
+        if (mSoundPool != null) {
+            mSoundPool.release();
+        }
+        final AudioAttributes attrs = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        mSoundPool = new SoundPool.Builder()
+                .setMaxStreams(4)
+                .setAudioAttributes(attrs)
+                .build();
+
+        final int fallbackSoundId = loadSound(context, "audio");
+        mSoundStandard = loadSound(context, "audio_standard");
+        if (mSoundStandard == -1) mSoundStandard = fallbackSoundId;
+        mSoundDelete = loadSound(context, "audio_delete");
+        if (mSoundDelete == -1) mSoundDelete = fallbackSoundId;
+        mSoundReturn = loadSound(context, "audio_return");
+        if (mSoundReturn == -1) mSoundReturn = fallbackSoundId;
+        mSoundSpacebar = loadSound(context, "audio_spacebar");
+        if (mSoundSpacebar == -1) mSoundSpacebar = fallbackSoundId;
+    }
+
+    private int loadSound(final Context context, final String name) {
+        final int resId = context.getResources().getIdentifier(name, "raw", context.getPackageName());
+        if (resId != 0) {
+            return mSoundPool.load(context, resId, 1);
+        }
+        return -1;
+    }
+
+    public void release() {
+        if (mSoundPool != null) {
+            mSoundPool.release();
+            mSoundPool = null;
+        }
     }
 
     public void performHapticAndAudioFeedback(
@@ -89,13 +136,27 @@ public final class AudioAndHapticFeedbackManager {
         if (hapticEvent != HapticEvent.KEY_PRESS) {
             return;
         }
-        final int sound = switch (code) {
-            case KeyCode.DELETE -> AudioManager.FX_KEYPRESS_DELETE;
-            case Constants.CODE_ENTER -> AudioManager.FX_KEYPRESS_RETURN;
-            case Constants.CODE_SPACE -> AudioManager.FX_KEYPRESS_SPACEBAR;
-            default -> AudioManager.FX_KEYPRESS_STANDARD;
+
+        final int customSoundId = switch (code) {
+            case KeyCode.DELETE -> mSoundDelete;
+            case Constants.CODE_ENTER -> mSoundReturn;
+            case Constants.CODE_SPACE -> mSoundSpacebar;
+            default -> mSoundStandard;
         };
-        mAudioManager.playSoundEffect(sound, mSettingsValues.mKeypressSoundVolume);
+
+        if (customSoundId != -1 && mSoundPool != null) {
+            float volume = mSettingsValues.mKeypressSoundVolume;
+            if (volume < 0) volume = 1.0f; // Default volume for SoundPool if not set
+            mSoundPool.play(customSoundId, volume, volume, 1, 0, 1.0f);
+        } else {
+            final int sound = switch (code) {
+                case KeyCode.DELETE -> AudioManager.FX_KEYPRESS_DELETE;
+                case Constants.CODE_ENTER -> AudioManager.FX_KEYPRESS_RETURN;
+                case Constants.CODE_SPACE -> AudioManager.FX_KEYPRESS_SPACEBAR;
+                default -> AudioManager.FX_KEYPRESS_STANDARD;
+            };
+            mAudioManager.playSoundEffect(sound, mSettingsValues.mKeypressSoundVolume);
+        }
     }
 
     public void performHapticFeedback(final View viewToPerformHapticFeedbackOn, final HapticEvent hapticEvent) {

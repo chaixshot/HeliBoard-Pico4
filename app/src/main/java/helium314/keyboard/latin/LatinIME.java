@@ -625,6 +625,7 @@ public class LatinIME extends InputMethodService implements
         mDictionaryFacilitator.closeDictionaries();
         mSettings.onDestroy();
         mReceiver.unregisterAll(this);
+        AudioAndHapticFeedbackManager.getInstance().release();
         mStatsUtilsManager.onDestroy(this /* context */);
         super.onDestroy();
         mHandler.removeCallbacksAndMessages(null);
