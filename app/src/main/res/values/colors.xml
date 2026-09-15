@@ -59,6 +59,7 @@
     <color name="setup_text_action">#FF1767CF</color>
     <color name="action_bar_color">#FFF5F5F5</color>
     <color name="navigation_bar_color">#B3888888</color>
+    <color name="selected_accent">#FF5C7FB8</color>
 
     <!-- Colors that are different for night theme -->
     <color name="foreground">#000</color>

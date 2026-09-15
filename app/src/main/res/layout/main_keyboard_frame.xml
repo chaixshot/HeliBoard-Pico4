@@ -10,7 +10,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/keyboard_background_lxx_base" >
 
     <include
         android:id="@+id/strip_container"

@@ -8,11 +8,13 @@ import android.content.res.Configuration
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.ColorFilter
+import android.graphics.Outline
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
@@ -361,6 +363,7 @@ class DynamicColors(context: Context, override val themeStyle: String, override 
                 } else {
                     view.background.colorFilter = backgroundFilter
                 }
+                setupMainBackground(view)
             }
             else -> view.background.colorFilter = backgroundFilter
         }
@@ -546,6 +549,7 @@ class DefaultColors (
                 } else {
                     view.background.colorFilter = backgroundFilter
                 }
+                setupMainBackground(view)
             }
             else -> view.background.colorFilter = backgroundFilter
         }
@@ -598,6 +602,7 @@ class AllColors(private val colorMap: EnumMap<ColorType, Int>, override val them
                 } else {
                     setColor(view.background, color)
                 }
+                setupMainBackground(view)
             }
             else -> setColor(view.background, color)
         }
@@ -619,6 +624,17 @@ private fun pressedStateList(pressed: Int, normal: Int): ColorStateList {
 private fun activatedStateList(activated: Int, normal: Int): ColorStateList {
     val states = arrayOf(intArrayOf(android.R.attr.state_activated), intArrayOf(-android.R.attr.state_activated))
     return ColorStateList(states, intArrayOf(activated, normal))
+}
+
+private fun setupMainBackground(view: View) {
+    val radius = view.resources.getDimension(R.dimen.keyboard_corner_radius)
+    if (radius <= 0) return
+    view.outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            outline.setRoundRect(0, 0, view.width, view.height, radius)
+        }
+    }
+    view.clipToOutline = true
 }
 
 enum class ColorType {
