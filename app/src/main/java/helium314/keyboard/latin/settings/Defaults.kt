@@ -44,11 +44,11 @@ object Defaults {
     }
 
     private const val DEFAULT_SIZE_SCALE = 1.0f // 100%
-    const val PREF_THEME_STYLE = KeyboardTheme.STYLE_MATERIAL
+    const val PREF_THEME_STYLE = KeyboardTheme.STYLE_ROUNDED
     fun PREF_ICON_STYLE(prefs: SharedPreferences) = prefs.getString(Settings.PREF_THEME_STYLE, PREF_THEME_STYLE)!!
-    const val PREF_THEME_COLORS = KeyboardTheme.THEME_LIGHT
-    const val PREF_THEME_COLORS_NIGHT = KeyboardTheme.THEME_DARK
-    const val PREF_THEME_KEY_BORDERS = false
+    const val PREF_THEME_COLORS = "Pico"
+    const val PREF_THEME_COLORS_NIGHT = "Pico"
+    const val PREF_THEME_KEY_BORDERS = true
     @JvmField
     val PREF_THEME_DAY_NIGHT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     const val PREF_CUSTOM_ICON_NAMES = ""
@@ -56,14 +56,14 @@ object Defaults {
     const val PREF_AUTO_CAP = true
     const val PREF_VIBRATE_ON = false
     const val PREF_VIBRATE_IN_DND_MODE = false
-    const val PREF_SOUND_ON = false
+    const val PREF_SOUND_ON = true
     const val PREF_SUGGEST_EMOJIS = true
     const val PREF_INLINE_EMOJI_SEARCH = true
     const val PREF_SHOW_EMOJI_DESCRIPTIONS = true
     @JvmField
-    var PREF_POPUP_ON = true
+    var PREF_POPUP_ON = false
     const val PREF_AUTO_CORRECTION = true
-    const val PREF_MORE_AUTO_CORRECTION = false
+    const val PREF_MORE_AUTO_CORRECTION = true
     const val PREF_AUTO_CORRECT_CONFIDENCE = 0.24f
     const val PREF_AUTOCORRECT_SHORTCUTS = true
     const val PREF_BACKSPACE_REVERTS_AUTOCORRECT = true
@@ -74,8 +74,8 @@ object Defaults {
     const val PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT = true
     const val PREF_KEY_USE_PERSONALIZED_DICTS = true
     const val PREF_KEY_USE_DOUBLE_SPACE_PERIOD = true
-    const val PREF_BLOCK_POTENTIALLY_OFFENSIVE = true
-    const val PREF_SHOW_LANGUAGE_SWITCH_KEY = false
+    const val PREF_BLOCK_POTENTIALLY_OFFENSIVE = false
+    const val PREF_SHOW_LANGUAGE_SWITCH_KEY = true
     const val PREF_LANGUAGE_SWITCH_KEY = "internal"
     const val PREF_SHOW_EMOJI_KEY = false
     const val PREF_SHOW_DPAD_KEY = true
@@ -87,27 +87,27 @@ object Defaults {
     @JvmField
     val PREF_SPLIT_SPACER_SCALE = Array(4) { DEFAULT_SIZE_SCALE }
     @JvmField
-    val PREF_KEYBOARD_HEIGHT_SCALE = Array(4) { DEFAULT_SIZE_SCALE }
+    val PREF_KEYBOARD_HEIGHT_SCALE = arrayOf(1.0f, 1.5f, 1.0f, 1.0f)
     @JvmField
     val PREF_BOTTOM_ROW_SCALE = Array(4) { DEFAULT_SIZE_SCALE }
     @JvmField
     // DEFAULT_SIZE_SCALE for portrait, 0 for landscape (normal and folded)
-    val PREF_BOTTOM_PADDING_SCALE = arrayOf(DEFAULT_SIZE_SCALE, 0f, DEFAULT_SIZE_SCALE, 0f)
+    val PREF_BOTTOM_PADDING_SCALE = arrayOf(DEFAULT_SIZE_SCALE, 1.5076337f, DEFAULT_SIZE_SCALE, 0f)
     @JvmField
-    val PREF_SIDE_PADDING_SCALE = Array(8) { 0f }
+    val PREF_SIDE_PADDING_SCALE = arrayOf(0f, 0.20839696f, 0f, 0f, 0f, 0f, 0f, 0f)
     @JvmField
-    val PREF_KEY_GAP_SCALE = Array(4) { DEFAULT_SIZE_SCALE }
+    val PREF_KEY_GAP_SCALE = arrayOf(0.5f, 0.608067f, 1.0f, 1.0f)
     const val PREF_FONT_SCALE = DEFAULT_SIZE_SCALE
-    const val PREF_HINT_FONT_SCALE = DEFAULT_SIZE_SCALE
-    const val PREF_EMOJI_FONT_SCALE = DEFAULT_SIZE_SCALE
+    const val PREF_HINT_FONT_SCALE = 1.1081995f
+    const val PREF_EMOJI_FONT_SCALE = 0.70534354f
     const val PREF_EMOJI_KEY_FIT = true
     const val PREF_EMOJI_SKIN_TONE = ""
     @JvmField
     val PREF_SPACE_HORIZONTAL_SWIPE = KeyboardActionListener.SwipeAction.MOVE_CURSOR.name
     @JvmField
-    val PREF_SPACE_VERTICAL_SWIPE = KeyboardActionListener.SwipeAction.NONE.name
+    val PREF_SPACE_VERTICAL_SWIPE = KeyboardActionListener.SwipeAction.TOGGLE_DPAD.name
     const val PREF_DELETE_SWIPE = true
-    const val PREF_AUTOSPACE_AFTER_PUNCTUATION = false
+    const val PREF_AUTOSPACE_AFTER_PUNCTUATION = true
     const val PREF_AUTOSPACE_AFTER_SUGGESTION = true
     const val PREF_AUTOSPACE_AFTER_GESTURE_TYPING = true
     const val PREF_AUTOSPACE_BEFORE_GESTURE_TYPING = true
@@ -119,7 +119,7 @@ object Defaults {
     const val PREF_GESTURE_INPUT = true
     const val PREF_VIBRATION_DURATION_SETTINGS = -1
     const val PREF_KEYPRESS_SOUND_VOLUME = -0.01f
-    const val PREF_KEY_LONGPRESS_TIMEOUT = 300
+    const val PREF_KEY_LONGPRESS_TIMEOUT = 255
     const val PREF_ENABLE_EMOJI_ALT_PHYSICAL_KEY = true
     const val PREF_GESTURE_PREVIEW_TRAIL = true
     const val PREF_GESTURE_FLOATING_PREVIEW_TEXT = true
@@ -132,12 +132,12 @@ object Defaults {
     const val PREF_SHOW_SETUP_WIZARD_ICON = true
     const val PREF_USE_CONTACTS = false
     const val PREF_USE_APPS = false
-    const val PREFS_LONG_PRESS_SYMBOLS_FOR_NUMPAD = false
+    const val PREFS_LONG_PRESS_SYMBOLS_FOR_NUMPAD = true
     const val PREF_ONE_HANDED_MODE = false
     @SuppressLint("RtlHardcoded")
     const val PREF_ONE_HANDED_GRAVITY = Gravity.LEFT
-    const val PREF_ONE_HANDED_SCALE = 1f
-    const val PREF_SHOW_NUMBER_ROW = false
+    const val PREF_ONE_HANDED_SCALE = 2.135556f
+    const val PREF_SHOW_NUMBER_ROW = true
     const val PREF_SHOW_NUMBER_ROW_IN_SYMBOLS = true
     const val PREF_LOCALIZED_NUMBER_ROW = true
     const val PREF_SHOW_NUMBER_ROW_HINTS = false
@@ -157,29 +157,30 @@ object Defaults {
     const val PREF_CLIPBOARD_HISTORY_PINNED_FIRST = true
     const val PREF_CLIPBOARD_USE_FILES = true
     const val PREF_CLIPBOARD_FILES_SIZE_LIMIT = 20 // megabytes
-    const val PREF_ADD_TO_PERSONAL_DICTIONARY = false
+    const val PREF_ADD_TO_PERSONAL_DICTIONARY = true
     @JvmField
-    val PREF_NAVBAR_COLOR = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-    const val PREF_ENABLED_SUBTYPES = ""
-    const val PREF_SELECTED_SUBTYPE = ""
-    const val PREF_URL_DETECTION = false
-    const val PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG = false
+    val PREF_NAVBAR_COLOR = false
+    const val PREF_ENABLED_SUBTYPES = "en-US§SupportTouchPositionCorrection,TrySuppressingImeSwitcher;"
+    const val PREF_SELECTED_SUBTYPE = "en-US§SupportTouchPositionCorrection,TrySuppressingImeSwitcher"
+    const val PREF_URL_DETECTION = true
+    const val PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG = true
     const val PREF_TOOLBAR_MODE = "EXPANDABLE"
     const val PREF_TOOLBAR_HIDING_GLOBAL = true
-    const val PREF_TOOLBAR_SWIPE_DOWN_TO_HIDE = false
-    const val PREF_QUICK_PIN_TOOLBAR_KEYS = false
-    val PREF_PINNED_TOOLBAR_KEYS = defaultPinnedToolbarPref
-    val PREF_TOOLBAR_KEYS = defaultToolbarPref
-    const val PREF_AUTO_SHOW_TOOLBAR = false
-    const val PREF_AUTO_HIDE_TOOLBAR = false
+    const val PREF_TOOLBAR_SWIPE_DOWN_TO_HIDE = true
+    const val PREF_QUICK_PIN_TOOLBAR_KEYS = true
+    val PREF_PINNED_TOOLBAR_KEYS = "CLIPBOARD:false|UNDO:false|VOICE:false|NUMPAD:false|DPAD:false|SETTINGS:false|SELECT_ALL:false|SELECT_WORD:false|COPY:true|REDO:false|CUT:false|PASTE:false|ONE_HANDED:false|FLOATING:false|SPLIT:false|INCOGNITO:false|AUTOCORRECT:false|CLEAR_CLIPBOARD:false|EMOJI:false|LEFT:false|RIGHT:false|UP:false|DOWN:false|WORD_LEFT:false|WORD_RIGHT:false|PAGE_UP:false|PAGE_DOWN:false|FULL_LEFT:false|FULL_RIGHT:false|PAGE_START:false|PAGE_END:false"
+    val PREF_TOOLBAR_KEYS = "SETTINGS:false|VOICE:true|CLIPBOARD:false|UNDO:true|REDO:true|SELECT_WORD:false|COPY:true|PASTE:true|LEFT:true|RIGHT:true|NUMPAD:false|DPAD:false|SELECT_ALL:false|CUT:false|ONE_HANDED:false|FLOATING:false|SPLIT:false|INCOGNITO:false|AUTOCORRECT:true|CLEAR_CLIPBOARD:false|EMOJI:false|UP:false|DOWN:false|WORD_LEFT:false|WORD_RIGHT:false|PAGE_UP:false|PAGE_DOWN:false|FULL_LEFT:false|FULL_RIGHT:false|PAGE_START:false|PAGE_END:false"
+    const val PREF_AUTO_SHOW_TOOLBAR = true
+    const val PREF_AUTO_HIDE_TOOLBAR = true
     val PREF_CLIPBOARD_TOOLBAR_KEYS = defaultClipboardToolbarPref
-    const val PREF_ABC_AFTER_EMOJI = false
-    const val PREF_ABC_AFTER_CLIP = false
+    const val PREF_ABC_AFTER_EMOJI = true
+    const val PREF_ABC_AFTER_CLIP = true
     const val PREF_ABC_AFTER_SYMBOL_SPACE = true
     const val PREF_ABC_AFTER_NUMPAD_SPACE = false
-    const val PREF_REMOVE_REDUNDANT_POPUPS = false
+    const val PREF_REMOVE_REDUNDANT_POPUPS = true
     const val PREF_SPACE_BAR_TEXT = ""
     const val PREF_TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    const val PREF_EMOJI_MAX_SDK = 36
     const val PREF_RECENT_EMOJIS = ""
     const val PREF_LAST_SHOWN_EMOJI_CATEGORY_PAGE_ID = 0
     const val PREF_SHOW_DEBUG_SETTINGS = false
@@ -187,10 +188,10 @@ object Defaults {
     const val PREF_SHOW_SUGGESTION_INFOS = false
     const val PREF_FORCE_NON_DISTINCT_MULTITOUCH = false
     const val PREF_SLIDING_KEY_INPUT_PREVIEW = true
-    const val PREF_USER_COLORS = "[]"
-    const val PREF_USER_MORE_COLORS = 0
+    const val PREF_USER_COLORS = "[{\"name\":\"accent\",\"auto\":false,\"color\":-11645362},{\"name\":\"spacebar\",\"auto\":false,\"color\":-11645362},{\"name\":\"keys\",\"auto\":false,\"color\":-11776948},{\"name\":\"hint_text\",\"auto\":false,\"color\":-1610612737},{\"name\":\"text\",\"auto\":false,\"color\":-1},{\"name\":\"suggestion_text\",\"auto\":true,\"color\":null},{\"name\":\"spacebar_text\",\"auto\":false,\"color\":-6250336},{\"name\":\"background\",\"auto\":false,\"color\":-12763843},{\"name\":\"gesture\",\"auto\":true,\"color\":-13487566},{\"name\":\"functional_keys\",\"auto\":false,\"color\":-13355980}]"
+    const val PREF_USER_MORE_COLORS = 1
     const val PREF_USER_ALL_COLORS = ""
-    const val PREF_SAVE_SUBTYPE_PER_APP = false
+    const val PREF_SAVE_SUBTYPE_PER_APP = true
     const val PREF_SPELLCHECK_SUGGEST = true
     const val PREF_SHOW_ONLY_TOOLBAR_WITH_HARDWARE_KEYBOARD = false
 }
