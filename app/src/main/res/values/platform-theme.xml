@@ -11,6 +11,7 @@
 
         <item name="android:statusBarColor">@color/action_bar_color</item>
         <item name="android:navigationBarColor">@color/navigation_bar_color</item>
+        <item name="android:windowBackground">@drawable/activity_background_pico</item>
         <item name="android:colorBackground">@color/setup_background</item>
         <item name="android:colorForeground">@color/foreground</item>
         <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>

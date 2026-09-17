@@ -10,11 +10,12 @@
     <color name="keyboard_background">@color/keyboard_background_dark</color>
 
     <!-- Color resources for setup wizard, tutorial and settings -->
-    <color name="accent">@color/highlight_color_lxx_dark</color>
-    <color name="setup_background">#FF303030</color>
-    <color name="setup_step_background">#FF2D4260</color>
-    <color name="setup_text_title">#FF5C94F1</color>
+    <color name="accent">#FFA4C639</color>
+    <color name="setup_background">#FF1A1A1A</color>
+    <color name="setup_step_background">#FF2D2D2D</color>
+    <color name="setup_text_title">#FFA4C639</color>
     <color name="setup_text_action">#FFFFFFFF</color>
-    <color name="action_bar_color">#FF212121</color>
-    <color name="navigation_bar_color">#FF303030</color>
+    <color name="action_bar_color">#FF2D2D2D</color>
+    <color name="navigation_bar_color">#FF1A1A1A</color>
+    <color name="selected_accent">#FF5C7FB8</color>
 </resources>

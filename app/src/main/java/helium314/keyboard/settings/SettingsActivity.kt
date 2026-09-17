@@ -3,8 +3,11 @@ package helium314.keyboard.settings
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Outline
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.view.ViewOutlineProvider
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
@@ -86,6 +89,7 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
             KeyboardIconsSet.instance.loadIcons(this) // otherwise we may crash when displaying toolbar keys
 
         settingsContainer = SettingsContainer(this)
+        setupActivityBackground()
 
         val spellchecker = intent?.getBooleanExtra("spellchecker", false) ?: false
 
@@ -192,6 +196,17 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
         forceTheme = theme
         forceNight = night
         KeyboardSwitcher.getInstance().setThemeNeedsReload()
+    }
+
+    private fun setupActivityBackground() {
+        val radius = resources.getDimension(R.dimen.activity_corner_radius)
+        if (radius <= 0) return
+        window.decorView.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, radius)
+            }
+        }
+        window.decorView.clipToOutline = true
     }
 
     private fun findCrashReports(onlyUnprotected: Boolean): List<File> {

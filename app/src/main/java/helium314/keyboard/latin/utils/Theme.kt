@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 package helium314.keyboard.latin.utils
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
@@ -18,18 +17,23 @@ import helium314.keyboard.latin.R
 @Composable
 fun Theme(dark: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val material3 = Typography()
-    val colorScheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (dark) dynamicDarkColorScheme(LocalContext.current)
-        else dynamicLightColorScheme(LocalContext.current)
-    } else {
-        // todo (later): more colors
-        if (dark) darkColorScheme(
-            primary = colorResource(R.color.accent),
-        )
-        else lightColorScheme(
-            primary = colorResource(R.color.accent)
-        )
-    }
+    val colorScheme = if (dark) darkColorScheme(
+        primary = colorResource(R.color.accent),
+        onPrimary = colorResource(R.color.foreground),
+        primaryContainer = colorResource(R.color.selected_accent),
+        onPrimaryContainer = colorResource(R.color.foreground),
+        background = colorResource(R.color.setup_background),
+        onBackground = colorResource(R.color.foreground),
+        surface = colorResource(R.color.setup_step_background),
+        onSurface = colorResource(R.color.foreground),
+        surfaceVariant = colorResource(R.color.action_bar_color),
+        onSurfaceVariant = colorResource(R.color.foreground),
+        outline = colorResource(R.color.foreground_weak)
+    ) else lightColorScheme(
+        primary = colorResource(R.color.accent),
+        background = colorResource(R.color.setup_background),
+        surface = colorResource(R.color.action_bar_color)
+    )
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography(
