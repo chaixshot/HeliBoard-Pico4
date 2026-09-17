@@ -12,3 +12,11 @@
 # after upgrading to gradle 8, stack traces contain "unknown source"
 -keepattributes SourceFile,LineNumberTable
 -dontobfuscate
+
+# Keep Xposed entry point class
+-keep class helium314.keyboard.Xposed.HeliBoard { *; }
+-keep class helium314.keyboard.Xposed.** { *; }
+
+# Keep official Xposed API interfaces
+-keep class de.robv.android.xposed.** { *; }
+-dontwarn de.robv.android.xposed.**

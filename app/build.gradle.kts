@@ -143,4 +143,6 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.16.1")
     testImplementation("androidx.test:runner:1.7.0")
     testImplementation("androidx.test:core:1.7.0")
+
+    compileOnly("de.robv.android.xposed:api:82")
 }
