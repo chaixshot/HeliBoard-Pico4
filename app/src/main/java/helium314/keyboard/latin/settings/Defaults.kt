@@ -87,12 +87,12 @@ object Defaults {
     @JvmField
     val PREF_SPLIT_SPACER_SCALE = Array(4) { DEFAULT_SIZE_SCALE }
     @JvmField
-    val PREF_KEYBOARD_HEIGHT_SCALE = arrayOf(1.0f, 1.5f, 1.0f, 1.0f)
+    val PREF_KEYBOARD_HEIGHT_SCALE = arrayOf(1.0f, 1.8f, 1.0f, 1.0f)
     @JvmField
     val PREF_BOTTOM_ROW_SCALE = Array(4) { DEFAULT_SIZE_SCALE }
     @JvmField
     // DEFAULT_SIZE_SCALE for portrait, 0 for landscape (normal and folded)
-    val PREF_BOTTOM_PADDING_SCALE = arrayOf(DEFAULT_SIZE_SCALE, 1.5076337f, DEFAULT_SIZE_SCALE, 0f)
+    val PREF_BOTTOM_PADDING_SCALE = arrayOf(DEFAULT_SIZE_SCALE, 0f, DEFAULT_SIZE_SCALE, 0f)
     @JvmField
     val PREF_SIDE_PADDING_SCALE = arrayOf(0f, 0.20839696f, 0f, 0f, 0f, 0f, 0f, 0f)
     @JvmField

@@ -1278,7 +1278,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public boolean onEvaluateFullscreenMode() {
-        if (isImeSuppressedByHardwareKeyboard() || mSettings.getCurrent().mIsFloatingKeyboard) {
+        /*if (isImeSuppressedByHardwareKeyboard() || mSettings.getCurrent().mIsFloatingKeyboard) {
             // If there is a hardware keyboard or we're floating, disable full screen mode.
             return false;
         }
@@ -1298,7 +1298,7 @@ public class LatinIME extends InputMethodService implements
             final int usedHeight = mKeyboardSwitcher.getVisibleKeyboardView().getHeight() + mSuggestionStripView.getHeight();
             final int availableHeight = getResources().getDisplayMetrics().heightPixels;
             return usedHeight > availableHeight * 0.6; // if we have less than 40% available, use fullscreen mode
-        }
+        }*/
         return false;
     }
 
