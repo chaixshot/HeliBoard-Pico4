@@ -60,6 +60,13 @@ SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-only
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="pvr.2dtovr.mode"
+                android:value="6" />
+            <meta-data
+                android:name="pico.vr.position"
+                android:value="near" />
         </activity>
 
         <!-- separate activity that's used internally, only necessary in case the launcher icon is disabled on Android < 10 -->
@@ -75,6 +82,13 @@ SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-only
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:mimeType="application/octet-stream" android:scheme="content" android:host="*" android:pathPattern=".*\\.dict" />
             </intent-filter>
+
+            <meta-data
+                android:name="pvr.2dtovr.mode"
+                android:value="6" />
+            <meta-data
+                android:name="pico.vr.position"
+                android:value="near" />
         </activity>
 
         <activity android:name=".spellcheck.SpellCheckerSettingsActivity"
@@ -84,6 +98,13 @@ SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-only
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
+
+            <meta-data
+                android:name="pvr.2dtovr.mode"
+                android:value="6" />
+            <meta-data
+                android:name="pico.vr.position"
+                android:value="near" />
         </activity>
 
         <activity android:name="helium314.keyboard.keyboard.emoji.EmojiSearchActivity" android:exported="false"
