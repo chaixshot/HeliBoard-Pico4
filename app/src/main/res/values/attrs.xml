@@ -98,6 +98,10 @@
         <attr name="keyPreviewBackground" format="reference" />
         <!-- Vertical offset of the key press feedback from the key. -->
         <attr name="keyPreviewOffset" format="dimension" />
+        <!-- Vertical offset of the popup keys panel from the key preview or key. -->
+        <attr name="popupKeysPanelVerticalOffset" format="dimension" />
+        <!-- Scale factor for the popup keys panel. -->
+        <attr name="popupKeysPanelScale" format="float" />
         <!-- Layout resource for popup keys keyboard -->
         <attr name="popupKeysKeyboardLayout" format="reference" />
         <!-- Layout resource for popup keys keyboard of action key -->

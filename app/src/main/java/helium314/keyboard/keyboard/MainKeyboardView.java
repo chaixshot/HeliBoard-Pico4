@@ -103,6 +103,8 @@ public final class MainKeyboardView extends KeyboardView implements DrawingProxy
 
     // Key preview
     private final KeyPreviewDrawParams mKeyPreviewDrawParams;
+    private final int mPopupKeysPanelVerticalOffset;
+    private final float mPopupKeysPanelScale;
     private final KeyPreviewChoreographer mKeyPreviewChoreographer;
 
     // More keys keyboard
@@ -184,6 +186,10 @@ public final class MainKeyboardView extends KeyboardView implements DrawingProxy
 
         mKeyPreviewDrawParams = new KeyPreviewDrawParams(mainKeyboardViewAttr);
         mKeyPreviewChoreographer = new KeyPreviewChoreographer(mKeyPreviewDrawParams);
+        mPopupKeysPanelVerticalOffset = mainKeyboardViewAttr.getDimensionPixelOffset(
+                R.styleable.MainKeyboardView_popupKeysPanelVerticalOffset, 0);
+        mPopupKeysPanelScale = mainKeyboardViewAttr.getFloat(
+                R.styleable.MainKeyboardView_popupKeysPanelScale, 1.0f);
 
         final int popupKeysKeyboardLayoutId = mainKeyboardViewAttr.getResourceId(
                 R.styleable.MainKeyboardView_popupKeysKeyboardLayout, 0);
@@ -498,7 +504,7 @@ public final class MainKeyboardView extends KeyboardView implements DrawingProxy
             final PopupKeysKeyboard.Builder builder = new PopupKeysKeyboard.Builder(
                     getContext(), key, getKeyboard(), isSinglePopupKeyWithPreview,
                     mKeyPreviewDrawParams.getVisibleWidth(),
-                    mKeyPreviewDrawParams.getVisibleHeight(), newLabelPaint(key));
+                    mKeyPreviewDrawParams.getVisibleHeight(), newLabelPaint(key), mPopupKeysPanelScale);
             popupKeysKeyboard = builder.build();
             mPopupKeysKeyboardCache.put(key, popupKeysKeyboard);
         }
@@ -524,7 +530,8 @@ public final class MainKeyboardView extends KeyboardView implements DrawingProxy
         // aligned with the bottom edge of the visible part of the key preview.
         // {@code mPreviewVisibleOffset} has been set appropriately in
         // {@link KeyboardView#showKeyPreview(PointerTracker)}.
-        final int pointY = key.getY() + mKeyPreviewDrawParams.getVisibleOffset();
+        final int verticalOffset = Settings.getValues().mShowsNumberRow ? (mPopupKeysPanelVerticalOffset/2) : mPopupKeysPanelVerticalOffset;
+        final int pointY = key.getY() + mKeyPreviewDrawParams.getVisibleOffset() + verticalOffset;
         popupKeysKeyboardView.showPopupKeysPanel(this, this, pointX, pointY, mKeyboardActionListener);
         return popupKeysKeyboardView;
     }

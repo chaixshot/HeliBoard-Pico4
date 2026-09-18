@@ -42,6 +42,8 @@
         <item name="popupKeysKeyboardForActionLayout">@layout/popup_keys_keyboard_for_action_lxx</item>
         <item name="keyPreviewBackground">@drawable/keyboard_key_feedback_lxx_light</item>
         <item name="keyPreviewOffset">@dimen/config_key_preview_offset_lxx</item>
+        <item name="popupKeysPanelVerticalOffset">@dimen/config_popup_keys_panel_vertical_offset</item>
+        <item name="popupKeysPanelScale">@dimen/config_popup_keys_panel_scale</item>
         <!-- A negative value to disable text shadow layer. -->
         <item name="languageOnSpacebarTextShadowRadius">-1.0</item>
     </style>
