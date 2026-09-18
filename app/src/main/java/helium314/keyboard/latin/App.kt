@@ -10,6 +10,7 @@ import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.FoldableUtils
 import helium314.keyboard.latin.utils.LayoutUtilsCustom
 import helium314.keyboard.latin.utils.Log
+import helium314.keyboard.latin.utils.LsposedUtils
 import helium314.keyboard.latin.utils.SubtypeSettings
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.utils.upgradeToolbarPrefs
@@ -36,6 +37,7 @@ class App : Application() {
                     packageInfo.versionCode
                 }) on Android ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT})"
             )
+            LsposedUtils.fixScope(this@App)
         }
 
         RichInputMethodManager.init(this)
