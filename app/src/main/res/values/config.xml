@@ -34,6 +34,8 @@
     <dimen name="config_popup_keys_keyboard_vertical_correction_holo">-26.4dp</dimen>
     <dimen name="config_key_preview_offset_holo">40.0dp</dimen>
     <dimen name="config_key_preview_offset_lxx">0dp</dimen>
+    <dimen name="config_popup_keys_panel_vertical_offset">24dp</dimen>
+    <item name="config_popup_keys_panel_scale" format="float" type="dimen">1.0</item>
     <fraction name="config_key_preview_text_ratio">82%</fraction>
     <fraction name="config_key_letter_ratio_holo">55%</fraction>
     <fraction name="config_key_letter_ratio_lxx">55%</fraction>

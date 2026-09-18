@@ -92,6 +92,7 @@ public final class EmojiPageKeyboardView extends KeyboardView implements
     // More keys panel (used by popup keys keyboard view)
     // TODO: Consider extending to support multiple popup keys panels
     private PopupKeysPanel mPopupKeysPanel;
+    private final float mPopupKeysPanelScale;
 
     public EmojiPageKeyboardView(final Context context, final AttributeSet attrs) {
         this(context, attrs, R.attr.keyboardViewStyle);
@@ -116,6 +117,8 @@ public final class EmojiPageKeyboardView extends KeyboardView implements
         mPopupKeysKeyboardContainer = inflater.inflate(popupKeysKeyboardLayoutId, null);
         mDescriptionView = mPopupKeysKeyboardContainer.findViewById(R.id.description_view);
         mPopupKeysKeyboardView = mPopupKeysKeyboardContainer.findViewById(R.id.popup_keys_keyboard_view);
+        mPopupKeysPanelScale = keyboardViewAttr.getFloat(
+            R.styleable.MainKeyboardView_popupKeysPanelScale, 1.0f);
         setFitsSystemWindows(false);
     }
 
@@ -193,7 +196,7 @@ public final class EmojiPageKeyboardView extends KeyboardView implements
         Keyboard popupKeysKeyboard = mPopupKeysKeyboardCache.get(key);
         if (popupKeysKeyboard == null) {
             final PopupKeysKeyboard.Builder builder = new PopupKeysKeyboard.Builder(
-                    getContext(), key, getKeyboard(), false, 0, 0, newLabelPaint(key));
+                    getContext(), key, getKeyboard(), false, 0, 0, newLabelPaint(key), mPopupKeysPanelScale);
             popupKeysKeyboard = builder.build();
             mPopupKeysKeyboardCache.put(key, popupKeysKeyboard);
         }

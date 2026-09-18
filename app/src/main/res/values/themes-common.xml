@@ -61,6 +61,8 @@
         <item name="keyRepeatInterval">@integer/config_key_repeat_interval</item>
         <item name="ignoreAltCodeKeyTimeout">@integer/config_ignore_alt_code_key_timeout</item>
         <item name="popupKeysKeyboardLayout">@layout/popup_keys_keyboard</item>
+        <item name="popupKeysPanelVerticalOffset">70dp</item>
+        <item name="popupKeysPanelScale">0.65</item>
         <item name="showPopupKeysKeyboardAtTouchedPoint">@bool/config_show_popup_keys_keyboard_at_touched_point</item>
         <item name="languageOnSpacebarTextRatio">@fraction/config_language_on_spacebar_text_ratio</item>
         <item name="languageOnSpacebarFadeoutAnimator">@animator/language_on_spacebar_fadeout</item>
