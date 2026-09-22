@@ -111,14 +111,14 @@ public final class EmojiPageKeyboardView extends KeyboardView implements
                 R.styleable.MainKeyboardView_popupKeysKeyboardLayout, 0);
         mConfigShowPopupKeysKeyboardAtTouchedPoint = keyboardViewAttr.getBoolean(
                 R.styleable.MainKeyboardView_showPopupKeysKeyboardAtTouchedPoint, false);
+        mPopupKeysPanelScale = keyboardViewAttr.getFloat(
+                R.styleable.MainKeyboardView_popupKeysPanelScale, 1.0f);
         keyboardViewAttr.recycle();
 
         final LayoutInflater inflater = LayoutInflater.from(getContext());
         mPopupKeysKeyboardContainer = inflater.inflate(popupKeysKeyboardLayoutId, null);
         mDescriptionView = mPopupKeysKeyboardContainer.findViewById(R.id.description_view);
         mPopupKeysKeyboardView = mPopupKeysKeyboardContainer.findViewById(R.id.popup_keys_keyboard_view);
-        mPopupKeysPanelScale = keyboardViewAttr.getFloat(
-            R.styleable.MainKeyboardView_popupKeysPanelScale, 1.0f);
         setFitsSystemWindows(false);
     }
 
