@@ -9,25 +9,26 @@ Does not use internet permission, and thus is 100% offline.
 
 ## 🖥️ Features
 
-- Add dictionaries for suggestions and spell check
-  - build your own, or get them [here](https://codeberg.org/Helium314/aosp-dictionaries#dictionaries) (quality may vary)
-  - additional dictionaries for emojis or scientific symbols can be used to provide suggestions (similar to "emoji search")
-  - note that for Korean layouts, suggestions only work using <a href="https://github.com/openboard-team/openboard/commit/83fca9533c03b9fecc009fc632577226bbd6301f">this dictionary, the tools in the dictionary repository are not able to create working dictionaries
-- Customize keyboard themes (style, colors and background image)
-- Emoji search (inline and separate, requires [emoji dictionary](https://codeberg.org/Helium314/aosp-dictionaries))
-  - can follow the system's day/night setting on Android 10+ (and on some versions of Android 9)
-  - can follow dynamic colors for Android 12+
-- Customize keyboard [layouts](https://github.com/HeliBorg/HeliBoard/blob/main/layouts.md) (only available when disabling *use system languages*)
-- Customize special layouts, like symbols, number,  or functional key layout
-- Multilingual typing
-- Glide typing (*only with closed source library* ☹️)
-  - library not included in the app, as there is no compatible open source library available
-  - can be extracted from GApps packages ("*swypelibs*"), or downloaded [here](https://github.com/erkserkserks/openboard/tree/46fdf2b550035ca69299ce312fa158e7ade36967/app/src/main/jniLibs) (click on the file and then "raw" or the tiny download button)
-- Clipboard history
-- One-handed mode
-- Split keyboard
-- Number pad
-- Backup and restore your settings and learned word / history data
+- **Pico VR Design:** Tailored with a custom Pico color palette and rounded key borders made specifically for Pico 4 headsets.
+- **VR-Optimized:** Built for point-and-tap typing with a taller 1.8x layout, adjusted padding, wider key gaps, and larger hint fonts for better visibility.
+- **Number Row & Numpad:** Dedicated top number row enabled by default, complete with long-press symbol access.
+- **Auto-Correction & Spacing:** Includes touch position correction to minimize mistypes, smart auto-spacing after punctuation, and a responsive 255ms long-press delay.
+- **Clipboard Manager:** Saves text and image clips up to 20MB, supports pinned snippets, and offers automatic inline paste suggestions.
+- **Smart Keyboard Modes:** Automatically snaps back to the main layout after you paste content or pick an emoji.
+- **Audio Feedback:** Audio keypress sounds provide clear physical-like cues while typing in VR.
+- **Expandable Toolbar:** A swipeable, auto-hiding bar with quick access to Copy, Paste, Undo, Redo, and Navigation controls.
+- **Privacy First:** Operates entirely offline with zero internet permissions required.
+
+## ⌨️ Shortcuts
+
+- **Dismiss Keyboard:** Swipe down on the top toolbar or suggestion strip to close the keyboard.
+- **Cursor Control:** Drag left or right across the spacebar to move your cursor through text.
+- **Toggle Numpad/D-Pad:** Swipe up or down on the spacebar to switch modes instantly.
+- **Delete Words:** Swipe left from the Backspace key to erase full words at once.
+- **Quick Period:** Double-tap the spacebar to insert a period and a space.
+- **Fast Symbols:** Long-press any letter or number key to type symbols without changing layouts.
+- **Custom Toolbar Pinning:** Pin or unpin your most-used tools (Copy, Paste, Undo, Redo, Voice) directly on the top bar.
+- **Auto-Return:** Emoji selection and clipboard pasting automatically drop you back into typing mode.
 
 ## ⛏️ Prerequisites
 
