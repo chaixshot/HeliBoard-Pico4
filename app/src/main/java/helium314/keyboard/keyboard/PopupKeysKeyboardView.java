@@ -204,12 +204,7 @@ public class PopupKeysKeyboardView extends KeyboardView implements PopupKeysPane
         if (mActivePointerId != pointerId) {
             return;
         }
-        final boolean hasOldKey = (mCurrentKey != null);
         mCurrentKey = detectKey(x, y);
-        if (hasOldKey && mCurrentKey == null) {
-            // A popup keys keyboard is canceled when detecting no key.
-            mController.onCancelPopupKeysPanel();
-        }
     }
 
     @Override

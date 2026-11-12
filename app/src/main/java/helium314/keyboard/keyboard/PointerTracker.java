@@ -133,6 +133,7 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
 
     // The current key where this pointer is.
     private Key mCurrentKey = null;
+    private Key mInitialDownKey = null;
     // The position where the current key was recognized for the first time.
     private int mKeyX;
     private int mKeyY;
@@ -529,6 +530,7 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
     }
 
     private Key onMoveKey(final int x, final int y) {
+        if (mInitialDownKey != null) return mInitialDownKey;
         return onMoveKeyInternal(x, y);
     }
 
@@ -707,6 +709,7 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
 
     private void onDownEventInternal(final int x, final int y, final long eventTime) {
         Key key = onDownKey(x, y, eventTime);
+        mInitialDownKey = key;
         // Key selection by dragging finger is allowed when 1) key selection by dragging finger is
         // enabled by configuration, 2) this pointer starts dragging from modifier key, or 3) this
         // pointer's KeyDetector always allows key selection by dragging finger, such as
@@ -1204,6 +1207,7 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
         resetKeySelectionByDraggingFinger();
         cancelTrackingForAction();
         setReleasedKeyGraphics(mCurrentKey, true);
+        mInitialDownKey = null;
         sPointerTrackerQueue.remove(this);
     }
 
@@ -1222,6 +1226,7 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
         sTimerProxy.cancelKeyTimersOf(this);
         setReleasedKeyGraphics(mCurrentKey, true);
         resetKeySelectionByDraggingFinger();
+        mInitialDownKey = null;
         dismissPopupKeysPanel();
     }
 
