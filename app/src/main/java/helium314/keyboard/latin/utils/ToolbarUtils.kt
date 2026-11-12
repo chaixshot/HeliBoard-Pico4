@@ -3,6 +3,7 @@ package helium314.keyboard.latin.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
@@ -32,6 +33,20 @@ fun createToolbarKey(context: Context, key: ToolbarKey): ImageButton {
     button.contentDescription = key.name.lowercase().getStringResourceOrName("", context)
     setToolbarButtonActivatedState(button)
     button.setImageDrawable(KeyboardIconsSet.instance.getNewDrawable(key.name, context))
+    // Keyboard UI Haptic: Track controller device ID and trigger hover feedback on toolbar keys
+    button.setOnHoverListener { _, event ->
+        PicoHapticHelper.setLastDeviceId(event.deviceId)
+        if (event.actionMasked == MotionEvent.ACTION_HOVER_ENTER) {
+            AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(event, true)
+        }
+        false
+    }
+    button.setOnTouchListener { _, event ->
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+            PicoHapticHelper.setLastDeviceId(event.deviceId)
+        }
+        false
+    }
     return button
 }
 

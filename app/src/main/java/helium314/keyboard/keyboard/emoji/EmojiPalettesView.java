@@ -15,6 +15,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -41,6 +42,9 @@ import helium314.keyboard.keyboard.internal.KeyVisualAttributes;
 import helium314.keyboard.keyboard.internal.keyboard_parser.EmojiParserKt;
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode;
 import helium314.keyboard.latin.AudioAndHapticFeedbackManager;
+import helium314.keyboard.latin.dictionary.Dictionary;
+import helium314.keyboard.latin.utils.PicoHapticHelper;
+import helium314.keyboard.latin.dictionary.DictionaryFactory;
 import helium314.keyboard.latin.R;
 import helium314.keyboard.latin.RichInputMethodManager;
 import helium314.keyboard.latin.RichInputMethodSubtype;
@@ -217,6 +221,8 @@ public final class EmojiPalettesView extends LinearLayout
         mEmojiCategory = new EmojiCategory(context, layoutSet, emojiPalettesViewAttr);
         emojiPalettesViewAttr.recycle();
         setFitsSystemWindows(true);
+        // Keyboard UI Haptic: Setup Pico VR controller hover haptics for emoji category palettes view
+        AudioAndHapticFeedbackManager.setupHoverHapticsRecursively(this);
     }
 
     @Override
@@ -243,6 +249,20 @@ public final class EmojiPalettesView extends LinearLayout
         host.addView(iconView);
         iconView.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
         iconView.setOnClickListener(this);
+        // Keyboard UI Haptic: Track active controller device ID and trigger hover/touch feedback on emoji category tabs
+        iconView.setOnHoverListener((v, event) -> {
+            PicoHapticHelper.setLastDeviceId(event.getDeviceId());
+            if (event.getActionMasked() == MotionEvent.ACTION_HOVER_ENTER) {
+                AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(event, true);
+            }
+            return false;
+        });
+        iconView.setOnTouchListener((v, event) -> {
+            if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                PicoHapticHelper.setLastDeviceId(event.getDeviceId());
+            }
+            return false;
+        });
         if (category == EmojiCategory.Category.RECENTS) {
             iconView.setOnLongClickListener(v -> {
                 AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, this, HapticEvent.KEY_LONG_PRESS);

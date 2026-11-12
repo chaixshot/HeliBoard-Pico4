@@ -242,7 +242,10 @@ class ClipboardHistoryManager(
         // just shrink the image a little, but don't change button size
         closeButton.scaleX = 0.8f
         closeButton.scaleY = 0.8f
-        closeButton.setOnClickListener { removeClipboardSuggestion() }
+        closeButton.setOnClickListener {
+            AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, it, HapticEvent.KEY_PRESS)
+            removeClipboardSuggestion()
+        }
 
         val colors = latinIME.mSettings.current.mColors
         textView.setTextColor(colors.get(ColorType.KEY_TEXT))
@@ -251,6 +254,7 @@ class ClipboardHistoryManager(
         colors.setBackground(binding.root, ColorType.CLIPBOARD_SUGGESTION_BACKGROUND)
 
         clipboardSuggestionView = binding.root
+        AudioAndHapticFeedbackManager.setupHoverHapticsRecursively(clipboardSuggestionView)
         return clipboardSuggestionView
     }
 

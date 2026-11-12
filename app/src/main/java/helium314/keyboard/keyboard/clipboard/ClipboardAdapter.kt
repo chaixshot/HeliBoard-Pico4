@@ -58,6 +58,12 @@ class ClipboardAdapter(
                 setOnClickListener(this@ViewHolder)
                 setOnTouchListener(this@ViewHolder)
                 setOnLongClickListener(this@ViewHolder)
+                setOnHoverListener { _, event ->
+                    if (event.actionMasked == MotionEvent.ACTION_HOVER_ENTER) {
+                        helium314.keyboard.latin.AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(event, true)
+                    }
+                    false
+                }
                 setBackgroundResource(itemBackgroundId)
                 isHapticFeedbackEnabled = false
             }

@@ -212,16 +212,22 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
     override fun onVerticalSpaceSwipe(steps: Int): Boolean = when (Settings.getValues().mSpaceSwipeVertical) {
         KeyboardActionListener.SwipeAction.MOVE_CURSOR -> onMoveCursorVertically(steps)
-        KeyboardActionListener.SwipeAction.SWITCH_LANGUAGE -> onLanguageSlide(steps)
+        KeyboardActionListener.SwipeAction.SWITCH_LANGUAGE -> {
+            performHapticFeedback(HapticEvent.KEY_PRESS)
+            onLanguageSlide(steps)
+        }
         KeyboardActionListener.SwipeAction.TOGGLE_NUMPAD -> {
+            performHapticFeedback(HapticEvent.KEY_PRESS)
             toggleLayout(LayoutDirective.Utility.NUMPAD, latinIME.currentAutoCapsState, latinIME.currentRecapitalizeState)
             true
         }
         KeyboardActionListener.SwipeAction.TOGGLE_DPAD -> {
+            performHapticFeedback(HapticEvent.KEY_PRESS)
             toggleLayout(LayoutDirective.Utility.DPAD, latinIME.currentAutoCapsState, latinIME.currentRecapitalizeState)
             true
         }
         KeyboardActionListener.SwipeAction.HIDE_KEYBOARD -> {
+            performHapticFeedback(HapticEvent.KEY_PRESS)
             latinIME.requestHideSelf(0)
             true
         }
@@ -232,6 +238,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             val requiredSteps = 8
 
             if (abs(steps) >= requiredSteps) {
+                performHapticFeedback(HapticEvent.KEY_PRESS)
                 TouchpadHandler.setTouchpadModeActive(true)
                 true
             } else {
@@ -311,6 +318,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         if (steps > 0) subtypeSwitchCount++ else subtypeSwitchCount--
 
         keyboardSwitcher.switchToSubtype(newSubtype)
+        performHapticFeedback(HapticEvent.KEY_PRESS)
         return true
     }
 

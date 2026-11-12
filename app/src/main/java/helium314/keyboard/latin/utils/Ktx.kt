@@ -13,8 +13,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -158,3 +161,25 @@ fun String.withHtmlLink(link: String) = "<a href='$link'>$this</a>"
 
 /** Convenience for converting dp to px, int -> int */
 fun Int.dpToPx(resources: Resources) = TypedValueCompat.dpToPx(this.toFloat(), resources.displayMetrics).toInt()
+
+@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
+fun androidx.compose.ui.Modifier.picoHapticHover(): androidx.compose.ui.Modifier = this.pointerInput(Unit) {
+    awaitPointerEventScope {
+        while (true) {
+            val event = awaitPointerEvent()
+            val motionEvent = event.motionEvent
+            val deviceId = motionEvent?.deviceId ?: 0
+            if (event.type == PointerEventType.Enter) {
+                helium314.keyboard.latin.AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(deviceId, true)
+            } else if (event.type == PointerEventType.Press) {
+                helium314.keyboard.latin.AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(deviceId, false)
+            }
+        }
+    }
+}
+
+fun androidx.compose.ui.Modifier.picoClickable(enabled: Boolean = true, onClick: () -> Unit): androidx.compose.ui.Modifier =
+    this.picoHapticHover().clickable(enabled = enabled) {
+        helium314.keyboard.latin.AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(0, false, 35)
+        onClick()
+    }

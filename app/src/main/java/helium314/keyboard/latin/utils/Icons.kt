@@ -16,7 +16,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
+import helium314.keyboard.latin.AudioAndHapticFeedbackManager
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.utils.picoHapticHover
 
 @Composable
 fun NextScreenIcon() {
@@ -28,12 +30,25 @@ fun NextScreenIcon() {
 
 @Composable
 fun EditButton(enabled: Boolean = true, onClick: () -> Unit) {
-    IconButton(onClick, enabled = enabled)  { Icon(painterResource(R.drawable.ic_edit), "edit") }
+    IconButton(
+        onClick = {
+            AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(0, false, 35)
+            onClick()
+        },
+        enabled = enabled,
+        modifier = Modifier.picoHapticHover()
+    ) { Icon(painterResource(R.drawable.ic_edit), "edit") }
 }
 
 @Composable
 fun DeleteButton(onClick: () -> Unit) {
-    IconButton(onClick)  { Icon(painterResource(R.drawable.ic_bin), stringResource(R.string.delete)) }
+    IconButton(
+        onClick = {
+            AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(0, false, 35)
+            onClick()
+        },
+        modifier = Modifier.picoHapticHover()
+    ) { Icon(painterResource(R.drawable.ic_bin), stringResource(R.string.delete)) }
 }
 
 @Composable
@@ -48,14 +63,28 @@ fun CloseIcon(@StringRes resId: Int) {
 
 @Composable
 fun DefaultButton(isDefault: Boolean, onClick: () -> Unit) {
-    IconButton(onClick = onClick, enabled = !isDefault) {
+    IconButton(
+        onClick = {
+            AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(0, false, 35)
+            onClick()
+        },
+        enabled = !isDefault,
+        modifier = Modifier.picoHapticHover()
+    ) {
         Icon(painterResource(R.drawable.ic_settings_default), "default")
     }
 }
 
 @Composable
 fun ExpandButton(enabled: Boolean = true, onClick: () -> Unit) {
-    IconButton(onClick = onClick, enabled = enabled) {
+    IconButton(
+        onClick = {
+            AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(0, false, 35)
+            onClick()
+        },
+        enabled = enabled,
+        modifier = Modifier.picoHapticHover()
+    ) {
         Icon(
             painterResource(R.drawable.ic_arrow_left),
             "expand",
@@ -66,7 +95,13 @@ fun ExpandButton(enabled: Boolean = true, onClick: () -> Unit) {
 
 @Composable
 fun BackButton(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
+    IconButton(
+        onClick = {
+            AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(0, false, 35)
+            onClick()
+        },
+        modifier = Modifier.picoHapticHover()
+    ) {
         Icon(
             painterResource(R.drawable.ic_arrow_back),
             stringResource(R.string.spoken_description_action_previous)

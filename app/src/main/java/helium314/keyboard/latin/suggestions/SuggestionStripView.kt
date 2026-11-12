@@ -98,6 +98,13 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             word.contentDescription = resources.getString(R.string.spoken_empty_suggestion)
             word.setOnClickListener(this)
             word.setOnLongClickListener(this)
+            // Keyboard UI Haptic: Hover feedback on word suggestions in suggestion bar
+            word.setOnHoverListener { _, event ->
+                if (event.actionMasked == MotionEvent.ACTION_HOVER_ENTER) {
+                    AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(event, true)
+                }
+                false
+            }
             colors.setBackground(word, ColorType.STRIP_BACKGROUND)
             wordViews.add(word)
             val divider = inflater.inflate(R.layout.suggestion_divider, null)
@@ -146,6 +153,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         enabledToolKeyBackground.colors = intArrayOf(color, Color.TRANSPARENT)
         enabledToolKeyBackground.gradientType = GradientDrawable.RADIAL_GRADIENT
         enabledToolKeyBackground.gradientRadius = resources.getDimensionPixelSize(R.dimen.config_suggestions_strip_height) / 2.1f
+        // Keyboard UI Haptic: Setup Pico VR controller hover haptics for suggestion strip
+        AudioAndHapticFeedbackManager.setupHoverHapticsRecursively(this)
 
         val mToolbarMode = if (isGone) ToolbarMode.HIDDEN else Settings.getValues().mToolbarMode
         if (mToolbarMode == ToolbarMode.TOOLBAR_KEYS) {
@@ -190,12 +199,15 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
                 val dx = me.x - down.x
 
                 if (Settings.getValues().mToolbarSwipeDownToHide && dy > 50.dpToPx(resources) && abs(dy) > abs(dx)) {
+                    AudioAndHapticFeedbackManager.getInstance().performHapticFeedback(this@SuggestionStripView, HapticEvent.KEY_PRESS)
                     listener.onSwipeDownOnToolbar()
                     return true
                 }
 
-                return if (!isExternalSuggestionVisible && toolbarContainer.visibility != VISIBLE && deltaY > 0 && dy < (-10).dpToPx(resources)) showMoreSuggestions()
-                else false
+                return if (!isExternalSuggestionVisible && toolbarContainer.visibility != VISIBLE && deltaY > 0 && dy < (-10).dpToPx(resources)) {
+                    AudioAndHapticFeedbackManager.getInstance().performHapticFeedback(this@SuggestionStripView, HapticEvent.KEY_PRESS)
+                    showMoreSuggestions()
+                } else false
             }
         }
         gestureDetector = GestureDetector(context, slidingListener)
@@ -266,6 +278,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             closeButton.layoutParams = toolbarKeyLayoutParams
             setupKey(closeButton, Settings.getValues().mColors)
             closeButton.setOnClickListener {
+                AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, it, HapticEvent.KEY_PRESS)
                 listener.removeExternalSuggestions()
             }
             suggestionsStrip.addView(closeButton)
@@ -332,7 +345,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             onClickToolbarKey(view) { listener.onCodeInput(it, Constants.SUGGESTION_STRIP_COORDINATE, Constants.SUGGESTION_STRIP_COORDINATE, false) }
             return
         }
-        AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, this, HapticEvent.KEY_PRESS)
+        AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, view, HapticEvent.KEY_PRESS)
         if (view === toolbarExpandKey) {
             setToolbarVisibility(toolbarContainer.visibility != VISIBLE)
         }

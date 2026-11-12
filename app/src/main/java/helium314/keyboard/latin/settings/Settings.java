@@ -322,7 +322,8 @@ public final class Settings implements SharedPreferences.OnSharedPreferenceChang
     }
 
     public static boolean readVibrationEnabled(final SharedPreferences prefs) {
-        return prefs.getBoolean(PREF_VIBRATE_ON, Defaults.PREF_VIBRATE_ON)
+        boolean vibrateDefault = Defaults.PREF_VIBRATE_ON || com.bytedance.osui.utils.OSUIHelper.isLoaded;
+        return prefs.getBoolean(PREF_VIBRATE_ON, vibrateDefault)
                 && AudioAndHapticFeedbackManager.getInstance().hasVibrator();
     }
 

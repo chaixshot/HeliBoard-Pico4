@@ -18,6 +18,7 @@ import helium314.keyboard.event.HapticEvent;
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode;
 import helium314.keyboard.latin.common.Constants;
 import helium314.keyboard.latin.settings.SettingsValues;
+import helium314.keyboard.latin.utils.PicoHapticHelper;
 
 /**
  * This class gathers audio feedback and haptic feedback functions.
@@ -108,14 +109,37 @@ public final class AudioAndHapticFeedbackManager {
     }
 
     public boolean hasVibrator() {
-        return mVibrator != null && mVibrator.hasVibrator();
+        // Keyboard UI Haptic: Returns true if device vibrator OR Pico VR native vibration library is loaded
+        return (mVibrator != null && mVibrator.hasVibrator()) || com.bytedance.osui.utils.OSUIHelper.isLoaded;
     }
 
     public void vibrate(final long milliseconds) {
-        if (mVibrator == null || milliseconds <= 0) {
-            return;
+        if (mVibrator != null && milliseconds > 0) {
+            mVibrator.vibrate(milliseconds);
         }
-        mVibrator.vibrate(milliseconds);
+        // Keyboard UI Haptic: Trigger Pico VR controller vibration for keypress/custom duration
+        PicoHapticHelper.triggerHaptic((float) milliseconds);
+    }
+
+    public static void setupHoverHapticsRecursively(final View view) {
+        // Keyboard UI Haptic: Recursively attach Pico VR controller hover listeners to view hierarchy
+        PicoHapticHelper.setupHoverHapticsRecursively(view);
+    }
+
+    public void triggerPicoHaptic(final int deviceId, final boolean isHover) {
+        PicoHapticHelper.triggerHaptic(deviceId, isHover, isHover ? 10f : 35f);
+    }
+
+    public void triggerPicoHaptic(final int deviceId, final boolean isHover, final long durationMs) {
+        PicoHapticHelper.triggerHaptic(deviceId, isHover, (float) durationMs);
+    }
+
+    public void triggerPicoHaptic(final android.view.MotionEvent event, final boolean isHover) {
+        PicoHapticHelper.triggerHaptic(event, isHover);
+    }
+
+    private void triggerPicoHaptic(final long durationMs) {
+        PicoHapticHelper.triggerHaptic((float) durationMs);
     }
 
     private boolean reevaluateIfSoundIsOn() {
@@ -160,14 +184,15 @@ public final class AudioAndHapticFeedbackManager {
     }
 
     public void performHapticFeedback(final View viewToPerformHapticFeedbackOn, final HapticEvent hapticEvent) {
-        if (!mSettingsValues.mVibrateOn || (mDoNotDisturb && !mSettingsValues.mVibrateInDndMode)) {
+        boolean vibrateOn = (mSettingsValues != null && mSettingsValues.mVibrateOn) || com.bytedance.osui.utils.OSUIHelper.isLoaded;
+        if (!vibrateOn || (mDoNotDisturb && mSettingsValues != null && !mSettingsValues.mVibrateInDndMode)) {
             return;
         }
         if (hapticEvent == HapticEvent.NO_HAPTICS) {
             // Avoid surprises with the handling of HapticFeedbackConstants.NO_HAPTICS
             return;
         }
-        if (hapticEvent.allowCustomDuration && mSettingsValues.mKeypressVibrationDuration >= 0) {
+        if (hapticEvent.allowCustomDuration && mSettingsValues != null && mSettingsValues.mKeypressVibrationDuration >= 0) {
             vibrate(mSettingsValues.mKeypressVibrationDuration);
             return;
         }
@@ -177,6 +202,10 @@ public final class AudioAndHapticFeedbackManager {
                     hapticEvent.feedbackConstant,
                     HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         }
+        // Keyboard UI Haptic: Use soft pulse (10ms) for gesture moves (e.g. backspace swipe/cursor move), standard (35ms) for key presses
+        long duration = (hapticEvent == HapticEvent.GESTURE_MOVE) ? 10 : 35;
+        boolean isHover = (hapticEvent == HapticEvent.GESTURE_MOVE);
+        PicoHapticHelper.triggerHaptic(PicoHapticHelper.getLastDeviceId(), isHover, (float) duration);
     }
 
     public void onSettingsChanged(final SettingsValues settingsValues) {

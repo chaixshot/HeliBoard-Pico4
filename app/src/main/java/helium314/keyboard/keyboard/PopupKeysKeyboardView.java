@@ -21,8 +21,10 @@ import androidx.annotation.NonNull;
 
 import helium314.keyboard.accessibility.AccessibilityUtils;
 import helium314.keyboard.accessibility.PopupKeysKeyboardAccessibilityDelegate;
+import helium314.keyboard.event.HapticEvent;
 import helium314.keyboard.keyboard.internal.KeyDrawParams;
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode;
+import helium314.keyboard.latin.AudioAndHapticFeedbackManager;
 import helium314.keyboard.latin.R;
 import helium314.keyboard.latin.RichInputMethodManager;
 import helium314.keyboard.latin.common.Constants;
@@ -63,6 +65,8 @@ public class PopupKeysKeyboardView extends KeyboardView implements PopupKeysPane
         popupKeysKeyboardViewAttr.recycle();
         mKeyDetector = new PopupKeysDetector(getResources().getDimension(
                 R.dimen.config_popup_keys_keyboard_slide_allowance));
+        // Keyboard UI Haptic: Setup Pico VR controller hover haptics for popup keys panel
+        AudioAndHapticFeedbackManager.setupHoverHapticsRecursively(this);
     }
 
     @Override
@@ -228,6 +232,7 @@ public class PopupKeysKeyboardView extends KeyboardView implements PopupKeysPane
      * Performs the specific action for this panel when the user presses a key on the panel.
      */
     protected void onKeyInput(final Key key, final int x, final int y) {
+        AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(key.getCode(), this, HapticEvent.KEY_PRESS);
         if (mListener != null) {
             final int code = key.getCode();
             if (code == KeyCode.MULTIPLE_CODE_POINTS) {
@@ -259,6 +264,11 @@ public class PopupKeysKeyboardView extends KeyboardView implements PopupKeysPane
         if (newKey != null) {
             updatePressKeyGraphics(newKey);
             invalidateKey(newKey);
+            // Keyboard UI Haptic: Soft haptic pulse when selecting/reselecting a popup key
+            AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(PointerTracker.getLastDeviceId(), true, 10);
+        } else {
+            // Keyboard UI Haptic: Soft haptic pulse when deselecting by moving pointer out of the popup panel
+            AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(PointerTracker.getLastDeviceId(), true, 10);
         }
         return newKey;
     }
@@ -328,8 +338,26 @@ public class PopupKeysKeyboardView extends KeyboardView implements PopupKeysPane
     /**
      * {@inheritDoc}
      */
+    private Key mHoveredKey;
+
     @Override
     public boolean onHoverEvent(final MotionEvent event) {
+        int action = event.getActionMasked();
+        if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE) {
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            Key hitKey = mKeyDetector != null ? mKeyDetector.detectHitKey(x, y) : null;
+            if (hitKey != null && hitKey != mHoveredKey) {
+                mHoveredKey = hitKey;
+                // Keyboard UI Haptic: Hover feedback when ray enters a popup key cap
+                AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(event, true);
+            } else if (hitKey == null) {
+                mHoveredKey = null;
+            }
+        } else if (action == MotionEvent.ACTION_HOVER_EXIT) {
+            mHoveredKey = null;
+        }
+
         final PopupKeysKeyboardAccessibilityDelegate accessibilityDelegate = mAccessibilityDelegate;
         if (accessibilityDelegate != null
                 && AccessibilityUtils.Companion.getInstance().isTouchExplorationEnabled()) {

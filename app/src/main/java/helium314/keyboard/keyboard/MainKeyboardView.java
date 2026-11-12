@@ -44,6 +44,7 @@ import helium314.keyboard.keyboard.internal.NonDistinctMultitouchHelper;
 import helium314.keyboard.keyboard.internal.SlidingKeyInputDrawingPreview;
 import helium314.keyboard.keyboard.internal.TimerHandler;
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode;
+import helium314.keyboard.latin.AudioAndHapticFeedbackManager;
 import helium314.keyboard.latin.R;
 import helium314.keyboard.latin.RichInputMethodSubtype;
 import helium314.keyboard.latin.common.ColorType;
@@ -223,6 +224,8 @@ public final class MainKeyboardView extends KeyboardView implements DrawingProxy
 
         mLanguageOnSpacebarHorizontalMargin = (int) getResources().getDimension(
                 R.dimen.config_language_on_spacebar_horizontal_margin);
+        // Keyboard UI Haptic: Setup Pico VR controller hover haptics for main keyboard view
+        AudioAndHapticFeedbackManager.setupHoverHapticsRecursively(this);
     }
 
     @Override
@@ -639,8 +642,26 @@ public final class MainKeyboardView extends KeyboardView implements DrawingProxy
     /**
      * {@inheritDoc}
      */
+    private Key mHoveredKey;
+
     @Override
     public boolean onHoverEvent(final MotionEvent event) {
+        final int action = event.getActionMasked();
+        if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE) {
+            final int x = (int) event.getX();
+            final int y = (int) event.getY();
+            final Key hitKey = mKeyDetector != null ? mKeyDetector.detectHitKey(x, y) : null;
+            if (hitKey != null && hitKey != mHoveredKey) {
+                mHoveredKey = hitKey;
+                // Keyboard UI Haptic: Hover feedback when ray enters a new main keyboard key cap
+                AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(event, true);
+            } else if (hitKey == null) {
+                mHoveredKey = null;
+            }
+        } else if (action == MotionEvent.ACTION_HOVER_EXIT) {
+            mHoveredKey = null;
+        }
+
         final MainKeyboardAccessibilityDelegate accessibilityDelegate = mAccessibilityDelegate;
         if (accessibilityDelegate != null
                 && AccessibilityUtils.Companion.getInstance().isTouchExplorationEnabled()) {

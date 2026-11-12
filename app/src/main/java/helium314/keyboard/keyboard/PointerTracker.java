@@ -616,7 +616,13 @@ public final class PointerTracker implements PointerTrackerQueue.Element,
         sListener.onCancelBatchInput();
     }
 
+    // Keyboard UI Haptic: Track active VR controller device ID for targeted haptic routing
+    public static int getLastDeviceId() {
+        return helium314.keyboard.latin.utils.PicoHapticHelper.getLastDeviceId();
+    }
+
     public void processMotionEvent(final MotionEvent me, final KeyDetector keyDetector) {
+        helium314.keyboard.latin.utils.PicoHapticHelper.setLastDeviceId(me.getDeviceId()); // Track device ID for controller-specific haptics
         final int action = me.getActionMasked();
         final long eventTime = me.getEventTime();
         if (action == MotionEvent.ACTION_MOVE) {

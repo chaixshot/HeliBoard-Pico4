@@ -39,9 +39,11 @@ import helium314.keyboard.keyboard.PopupKeysKeyboard;
 import helium314.keyboard.keyboard.PopupKeysKeyboardView;
 import helium314.keyboard.keyboard.PopupKeysPanel;
 import helium314.keyboard.keyboard.internal.PopupKeySpec;
+import helium314.keyboard.latin.AudioAndHapticFeedbackManager;
 import helium314.keyboard.latin.R;
 import helium314.keyboard.latin.common.CoordinateUtils;
 import helium314.keyboard.latin.settings.Settings;
+import helium314.keyboard.latin.utils.PicoHapticHelper;
 import kotlin.Unit;
 
 import java.util.WeakHashMap;
@@ -118,6 +120,8 @@ public final class EmojiPageKeyboardView extends KeyboardView implements
         mDescriptionView = mPopupKeysKeyboardContainer.findViewById(R.id.description_view);
         mPopupKeysKeyboardView = mPopupKeysKeyboardContainer.findViewById(R.id.popup_keys_keyboard_view);
         setFitsSystemWindows(false);
+        // Keyboard UI Haptic: Setup Pico VR controller hover haptics for emoji page keyboard
+        AudioAndHapticFeedbackManager.setupHoverHapticsRecursively(this);
     }
 
     @Override
@@ -260,8 +264,27 @@ public final class EmojiPageKeyboardView extends KeyboardView implements
     /**
      * {@inheritDoc}
      */
+    private Key mHoveredKey;
+
     @Override
     public boolean onHoverEvent(final MotionEvent event) {
+        PicoHapticHelper.setLastDeviceId(event.getDeviceId());
+        int action = event.getActionMasked();
+        if (action == MotionEvent.ACTION_HOVER_ENTER || action == MotionEvent.ACTION_HOVER_MOVE) {
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            Key hitKey = mKeyDetector != null ? mKeyDetector.detectHitKey(x, y) : null;
+            if (hitKey != null && hitKey != mHoveredKey) {
+                mHoveredKey = hitKey;
+                // Keyboard UI Haptic: Hover feedback when ray enters an emoji key cap
+                AudioAndHapticFeedbackManager.getInstance().triggerPicoHaptic(event, true);
+            } else if (hitKey == null) {
+                mHoveredKey = null;
+            }
+        } else if (action == MotionEvent.ACTION_HOVER_EXIT) {
+            mHoveredKey = null;
+        }
+
         final KeyboardAccessibilityDelegate<EmojiPageKeyboardView> accessibilityDelegate = mAccessibilityDelegate;
         if (accessibilityDelegate != null && AccessibilityUtils.Companion.getInstance().isTouchExplorationEnabled()) {
             return accessibilityDelegate.onHoverEvent(event);
@@ -275,6 +298,7 @@ public final class EmojiPageKeyboardView extends KeyboardView implements
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(final MotionEvent e) {
+        PicoHapticHelper.setLastDeviceId(e.getDeviceId());
         return switch (e.getActionMasked()) {
             case MotionEvent.ACTION_DOWN -> {
                 mPointerId = e.getPointerId(0);
