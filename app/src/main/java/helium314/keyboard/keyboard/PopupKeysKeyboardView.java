@@ -144,9 +144,11 @@ public class PopupKeysKeyboardView extends KeyboardView implements PopupKeysPane
             final int pointX, final int pointY) {
         mController = controller;
         final View container = getContainerView();
+        final Keyboard kb = getKeyboard();
+        final float scale = (kb instanceof PopupKeysKeyboard) ? ((PopupKeysKeyboard) kb).getScale() : 1.0f;
         // The coordinates of panel's left-top corner in parentView's coordinate system.
         // We need to consider background drawable paddings.
-        final int x = pointX - getDefaultCoordX() - container.getPaddingLeft() - getPaddingLeft();
+        final int x = (int)(pointX - getDefaultCoordX() * scale - container.getPaddingLeft() - getPaddingLeft());
         final int y = pointY - container.getMeasuredHeight() + container.getPaddingBottom()
                 + getPaddingBottom();
 
@@ -286,12 +288,16 @@ public class PopupKeysKeyboardView extends KeyboardView implements PopupKeysPane
 
     @Override
     public int translateX(final int x) {
-        return x - mOriginX;
+        final Keyboard kb = getKeyboard();
+        final float scale = (kb instanceof PopupKeysKeyboard) ? ((PopupKeysKeyboard) kb).getScale() : 1.0f;
+        return (int)((x - mOriginX) / (scale != 0f ? scale : 1.0f));
     }
 
     @Override
     public int translateY(final int y) {
-        return y - mOriginY;
+        final Keyboard kb = getKeyboard();
+        final float scale = (kb instanceof PopupKeysKeyboard) ? ((PopupKeysKeyboard) kb).getScale() : 1.0f;
+        return (int)((y - mOriginY) / (scale != 0f ? scale : 1.0f));
     }
 
     @SuppressLint("ClickableViewAccessibility")

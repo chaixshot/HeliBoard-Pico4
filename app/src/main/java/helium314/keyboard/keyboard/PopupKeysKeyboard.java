@@ -20,10 +20,16 @@ import helium314.keyboard.latin.utils.TypefaceUtils;
 
 public final class PopupKeysKeyboard extends Keyboard {
     private final int mDefaultKeyCoordX;
+    public final float mScale;
 
-    PopupKeysKeyboard(final PopupKeysKeyboardParams params) {
+    PopupKeysKeyboard(final PopupKeysKeyboardParams params, final float scale) {
         super(params);
+        mScale = scale;
         mDefaultKeyCoordX = params.getDefaultKeyCoordX() + params.mAbsolutePopupKeyWidth / 2;
+    }
+
+    public float getScale() {
+        return mScale;
     }
 
     public int getDefaultCoordX() {
@@ -259,16 +265,18 @@ public final class PopupKeysKeyboard extends Keyboard {
          * @param keyPreviewVisibleHeight the height of visible part of key popup preview
          * @param paintToMeasure the {@link Paint} object to measure a "popup key" width
          */
+        private final float mScale;
         public Builder(final Context context, final Key key, final Keyboard keyboard,
                 final boolean isSinglePopupKeyWithPreview, final int keyPreviewVisibleWidth,
-                final int keyPreviewVisibleHeight, final Paint paintToMeasure) {
+                final int keyPreviewVisibleHeight, final Paint paintToMeasure, final float scale) {
             super(context, new PopupKeysKeyboardParams());
+            mScale = scale;
             mParams.mId = keyboard.mId;
             readAttributes(keyboard.mPopupKeysTemplate);
 
             // TODO: Popup keys keyboard's vertical gap is currently calculated heuristically.
             // Should revise the algorithm.
-            mParams.mVerticalGap = keyboard.mVerticalGap / 2;
+            mParams.mVerticalGap = (int) (keyboard.mVerticalGap / 2 * scale);
             // This {@link PopupKeysKeyboard} is invoked from the <code>key</code>.
             mParentKey = key;
 
@@ -281,16 +289,17 @@ public final class PopupKeysKeyboard extends Keyboard {
                 // left/right/top paddings. The bottom paddings of both backgrounds don't need to
                 // be considered because the vertical positions of both backgrounds were already
                 // adjusted with their bottom paddings deducted.
-                keyWidth = keyPreviewVisibleWidth;
-                rowHeight = keyPreviewVisibleHeight + mParams.mVerticalGap;
+                keyWidth = (int) (keyPreviewVisibleWidth * scale);
+                rowHeight = (int) ((keyPreviewVisibleHeight + mParams.mVerticalGap) * scale);
             } else {
                 final float padding = context.getResources().getDimension(
                         R.dimen.config_popup_keys_keyboard_key_horizontal_padding)
                         + (key.hasLabelsInPopupKeys()
                                 ? mParams.mAbsolutePopupKeyWidth * LABEL_PADDING_RATIO : 0.0f);
-                keyWidth = getMaxKeyWidth(key, mParams.mAbsolutePopupKeyWidth, padding, paintToMeasure);
-                rowHeight = keyboard.mMostCommonKeyHeight;
+                keyWidth = (int) (getMaxKeyWidth(key, mParams.mAbsolutePopupKeyWidth, padding, paintToMeasure) * scale);
+                rowHeight = (int) (keyboard.mMostCommonKeyHeight * scale);
             }
+
             final int dividerWidth;
             if (key.needsDividersInPopupKeys()) {
                 dividerWidth = (int)(keyWidth * DIVIDER_RATIO);
@@ -350,7 +359,7 @@ public final class PopupKeysKeyboard extends Keyboard {
                     params.onAddKey(divider);
                 }
             }
-            return new PopupKeysKeyboard(params);
+            return new PopupKeysKeyboard(params, mScale);
         }
     }
 
